@@ -5,7 +5,8 @@
 
 #define FOSC 16000000
 #define BAUD 38400
-#define MYUBRR FOSC/(16*BAUD)+1
+//#define MYUBRR FOSC/(16*BAUD)+1
+#define MYUBRR ((FOSC / 16) / BAUD) -1
 //260
 
 void uart_init(void) {
@@ -17,6 +18,7 @@ void uart_init(void) {
 		UCSR0B = (1 << RXEN0) | (1 << TXEN0);
 	/* Set frame format: 8data, 2stop bit */
 	UCSR0C = (1 << USBS0) | (3 << UCSZ00);
+
 
 }
 
@@ -35,5 +37,17 @@ void uart_putchar(char chr) {
    /* Send "\r" Character */
 	while (!(UCSR0A & (1 << UDRE0)));   /* Wait for empty transmit buffer       */
 	UDR0 = '\r';
+
+}
+
+void uart_putstr(const char* str) {
+
+	int i = 0;
+	while (str[i] != 0) /* print the String  "Hello from ATmega328p" */
+	{
+		while (!(UCSR0A & (1 << UDRE0))); /* Wait for empty transmit buffer*/
+		UDR0 = str[i];            /* Put data into buffer, sends the data */
+		i++;                             /* increment counter           */
+	}
 
 }

@@ -7,8 +7,8 @@
 #include "stdlib.h"
 
 int main (void) {
-	//int i = 0;
-	//unsigned char data[] = "Hello from ATmega328p  ";
+	
+	unsigned char data[] = "Hello from Thomas  ";
 	uart_init();
 	char sign = 'T';
 
@@ -20,6 +20,7 @@ int main (void) {
 		PORTB &= ~(1 << PB0);
 		_delay_ms(500);
 		uart_putchar(sign);
+		uart_putstr(data);
 	}
 	return 0;
 }
