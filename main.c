@@ -1,5 +1,6 @@
 #include <avr/io.h>
 #include <util/delay.h>
+#include <string.h>
 
 #include "serial.h"
 #include "stdint.h"
@@ -7,20 +8,22 @@
 #include "stdlib.h"
 
 int main (void) {
-	
-	unsigned char data[] = "Hello from Thomas  ";
+	//allocating space for Ledcommand array in memory
+	char Ledcommand[15];
+	//initialize uart
 	uart_init();
-	char sign = 'T';
 
-	DDRB |= (1 << PB0);
+	//setting PORTB as output
+	DDRB |= (1 << PB0);	
+	
+	while (1) {
+	
+		// get line from UART
+		uart_getstr(Ledcommand);
 
-	while (true) {
-		PORTB |= (1 << PB0);
-		_delay_ms(500);
-		PORTB &= ~(1 << PB0);
-		_delay_ms(500);
-		uart_putchar(sign);
-		uart_putstr(data);
+
+		// send line to led_exe
+		led_executer(Ledcommand);
 	}
 	return 0;
 }
